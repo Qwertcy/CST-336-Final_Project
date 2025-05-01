@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>albumPage</title>
+</head>
+<body>
+  <%- include("partials/nav.ejs") %>
+  <%- include("partials/search.ejs") %>
+
+
+  <h1>albumPage</h1>
+  <h1><%= albumInfo.name %></h1>
+  <img id = "albumCoverImg" src="<%= albumInfo.images[0].url %>" alt="Album Cover"><br>
+  <a class= "albumInfoLink"  href="<%= albumInfo.external_urls.spotify %> "> Album Name: <%= albumInfo.name %></a><br>
+  
+  <!-- incase there is multiple artist -->
+  <% for (let i = 0; i < albumInfo.artists.length; i++) { %>
+    <a class= "albumInfoLink"  href="/artistPage/<%= albumInfo.artists[i].name %>">  Artist: <%= albumInfo.artists[i].name %></a>
+
+  <% } %> 
+  <br>
+  Release Date: <%= albumInfo.release_date %>
+
+  <% for (let i = 0; i < albumInfo.tracks.items.length; i++) { %>
+    
+    
+
+   <br>
+   <a class="titles" href="<%= albumInfo.tracks.items[i].external_urls.spotify %>">
+      <%= albumInfo.tracks.items[i].track_number %>. <%= albumInfo.tracks.items[i].name %>
+   </a>
+   <br>
+          
+  <% } %> 
+<br>
+
+
+  
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>individualRankings</title>
+</head>
+<body>
+  <%- include("partials/nav.ejs") %>
+  <%- include("partials/search.ejs") %>
+
+  <h1>individualRankings</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Artist Name</th>
+                <th>Overall Ranking</th>
+                <th>Value 1</th>
+                <th>Value 2</th>
+                <th>Value 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i = 0; i < rows.length; i++) { %>
+                <tr>
+                    <td><%= rows[i].artist_name%></td>
+                    <td><%= rows[i].overall %></td>
+                    <td><%= rows[i].val1 %></td>
+                    <td><%= rows[i].val2 %></td>
+                    <td><%= rows[i].val3 %></td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+</body>
+</html>

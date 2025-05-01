@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Otter Rankings</title>
+</head>
+<body>
+  <%- include("partials/nav.ejs") %>
+  <%- include("partials/search.ejs") %>
+
+
+  <h1>Otter Rankings</h1>
+  <table border="1">
+        <thead>
+            <tr>
+                <th>Artist ID</th>
+                <th>Artist Name</th>
+                <th>Overall Ranking</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (let i = 0; i < rows.length; i++) { %>
+                <tr>
+                    <td><%= rows[i].artist_id %></td>
+                    <td><%= rows[i].name %></td>
+                    <td><%= rows[i].overall %></td>
+                    <td>
+                        <% if (rows[i].image) { %>
+                            <img src="<%= rows[i].image %>" alt="<%= rows[i].name %>" width="100">
+                        <% } else { %>
+                            No Image Available
+                        <% } %>
+                    </td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+  
+
+</body>
+</html>

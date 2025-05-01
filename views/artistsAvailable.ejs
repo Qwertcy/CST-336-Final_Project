@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>artistsAvailable</title>
+</head>
+<body>
+  <%- include("partials/nav.ejs") %>
+  <%- include("partials/search.ejs") %>
+
+
+  <h1>artistsAvailable</h1>
+
+  <table border="1">
+    <thead>
+        <tr>
+            <th>Artist Name</th>
+            <th>Image</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% for (let i = 0; i < rows.length; i++) { %>
+            <tr>
+                <td><%= rows[i].name %></td>
+                <td>
+                    <% if (rows[i].image) { %>
+                        <img src="<%= rows[i].image %>" alt="<%= rows[i].name %>" width="100">
+                    <% } else { %>
+                        No Image Available
+                    <% } %>
+                </td>
+                <td>
+                    <a href="/rankArtist/<%= rows[i].artist_id %>">Rank This Artist</a>
+                </td>
+            </tr>
+        <% } %>
+    </tbody>
+</table>
+  
+</body>
+</html>

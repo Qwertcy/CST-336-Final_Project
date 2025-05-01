@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>artistPage</title>
+</head>
+<body>
+  <%- include("partials/nav.ejs") %>
+  <%- include("partials/search.ejs") %>
+
+
+  <h1>artistPage</h1>
+  <% for (let album of albumsArray) { %>
+    <div class="album">
+      <img src="<%= album.images[0].url %>" alt="Album Cover"><br>
+      <a class= "titles"  href="/albumPage/<%= album.id %>"><%= album.name %></a>
+
+      <p>
+        Track Count: <%= album.total_tracks %> <br>
+        Release Date: <%= album.release_date %>
+      </p>
+     
+
+
+    </div>
+  <% } %>
+
+</body>
+</html>
