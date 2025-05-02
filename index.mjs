@@ -531,3 +531,18 @@ function specificArtistRanking(artistId, userId){
     // const [rows] = await conn.query(sql, sqlParams);
     // return rows;
 }
+
+//temp method for user
+app.post('/submit-rankings',(req,res) =>{
+    const { rankLyrics, Replayability,Relevancy,rankArtistTraits,rankRecommend} = req.body
+    console.log("user info!!")
+    let rank=0;
+    for(let i = 0; i<rankArtistTraits.length; i++){
+        rank+=1;
+    }
+    console.log (rankLyrics, 
+        Replayability,
+        Relevancy,
+        rank,
+        rankRecommend);
+});
