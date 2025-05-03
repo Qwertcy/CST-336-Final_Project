@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>albumPage</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
   <%- include("partials/nav.ejs") %>
@@ -18,6 +21,16 @@
   <!-- incase there is multiple artist -->
   <% for (let i = 0; i < albumInfo.artists.length; i++) { %>
     <a class= "albumInfoLink"  href="/artistPage/<%= albumInfo.artists[i].name %>">  Artist: <%= albumInfo.artists[i].name %></a>
+    <br>
+    <button type="button" 
+    class="btn btn-primary open-modal-btn" 
+    data-toggle="modal" 
+    data-target="#rankingModal"
+    data-name="<%= albumInfo.artists[i].name %>" 
+    data-image="<%= albumInfo.images[0].url %>">
+    Rank Artist
+  </button>
+
 
   <% } %> 
   <br>
@@ -35,6 +48,110 @@
           
   <% } %> 
 <br>
+
+
+
+      <!-- Rank Modal -->
+      <div class="modal fade" id="rankingModal" tabindex="-1" role="dialog" aria-labelledby="rankingModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalArtistName">Artist Name</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            
+            <div class="modal-body">
+              <div class="text-center">
+                <img id="modalArtistImage" src="" alt="Artist Image" style="width:150px;height:150px;">
+              </div>
+      
+              <div class="container mt-3">
+                <div class="row">
+                  <div class="col">
+                    <p>Ranking 1:</p>
+                    <p>Ranking 2:</p>
+                    <p>Ranking 3:</p>
+                    <p>Ranking 4:</p>
+                    <p>Ranking 5:</p>
+                  </div>
+                  <div class="col">
+                    <input type="number" id="rank1" class="form-control mb-2">
+                    <input type="number" id="rank2" class="form-control mb-2">
+                    <input type="number" id="rank3" class="form-control mb-2">
+                    <input type="number" id="rank4" class="form-control mb-2">
+                    <input type="number" id="rank5" class="form-control mb-2">
+                  </div>
+                </div>
+              </div>
+      
+            </div>
+      
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button id="submitRankings" type="button" class="btn btn-primary">Submit Rankings</button>
+            </div>
+      
+          </div>
+        </div>
+      </div>
+
+      <script>
+        $('#rankingModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget);
+          var name = button.data('name');
+          var image = button.data('image');
+      
+          var modal = $(this);
+          modal.find('#modalArtistName').text(name);
+          modal.find('#modalArtistImage').attr('src', image);
+        });
+      
+        // submit button
+        document.getElementById("submitRankings").addEventListener("click", () => {
+          const ranks = [
+            document.getElementById("rank1").value,
+            document.getElementById("rank2").value,
+            document.getElementById("rank3").value,
+            document.getElementById("rank4").value,
+            document.getElementById("rank5").values
+          ];
+      
+      
+          const artistName = document.getElementById("modalArtistName").textContent;
+      
+      
+      
+          if (ranks.some(rank => rank === "")) {
+            alert("Please fill in all ranking fields before submitting!");
+            return;
+          }else{
+            fetch("/submitRankings", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ranks, artistName })  // must be stringified!
+              });
+          }
+      
+          console.log("Submitting rankings:", ranks);
+      
+          $('#rankingModal').modal('hide'); // close after submit
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+        });
+      </script>
+      <!-- info script -->
+
 
 
   
