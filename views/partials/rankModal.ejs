@@ -1,0 +1,232 @@
+<!-- Rank Modal -->
+<div class="modal fade" id="rankingModal" tabindex="-1" role="dialog" aria-labelledby="rankingModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <form id="rankForm" method="POST" action="/submit-rankings">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalArtistName">Artist Name</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+  
+          <div class="modal-body">
+            <div class="text-center mb-3">
+              <img id="modalArtistImage" src="" alt="Artist Image" style="width:150px;height:150px;">
+            </div>
+          <!-- Lyrics -->
+            <div class="form-group">
+              <label for="rankLyrics">Lyrics (1-10):</label>
+              <input type="number" id="rankLyrics" name="rankLyrics" class="form-control" max="10" required>
+            </div>
+            <!-- Replayability -->
+            <div class="form-group">
+              <label>Replayability (1-10):</label><br>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="Replayability" value="1" required>
+                <label class="form-check-label">1</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="Replayability" value="2">
+                <label class="form-check-label">2</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="Replayability" value="3">
+                <label class="form-check-label">3</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="Replayability" value="4">
+                <label class="form-check-label">4</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="Replayability" value="5">
+                <label class="form-check-label">5</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="Replayability" value="6">
+                <label class="form-check-label">6</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="Replayability" value="7">
+                <label class="form-check-label">7</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="Replayability" value="8">
+                <label class="form-check-label">8</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="Replayability" value="9">
+                <label class="form-check-label">9</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="Replayability" value="10">
+                <label class="form-check-label">10</label>
+              </div>
+            </div>
+            <!-- Relevancy -->
+            <div class="form-group">
+              <label for="rankRelevancy">Relevancy (1-10):</label>
+              <select id="Relevancy" name="Relevancy" class="form-control" required>
+                <option value="">-- Select --</option>
+                <option value="1">Completely Irrelevant</option>
+                <option value="2">barley Relevant</option>
+                <option value="3">Rarely Mentioned</option>
+                <option value="4">Occasionally Discussed</option>
+                <option value="5">Somewhat Relevant</option>
+                <option value="6">Decently Relevant</option>
+                <option value="7">Frequently Mentioned</option>
+                <option value="8">Popular & Active</option>
+                <option value="9">Very Relevant today</option>
+                <option value="10">Extremely Relevant!</option>
+              </select>
+            </div>
+  
+            <div class="form-group">
+              <label>Artist Qualities (select traits they have):</label><br>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rankArtistTraits" value="1" id="trait1">
+                <label class="form-check-label" for="Qualities">Sound</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rankArtistTraits" value="1" id="trait2">
+                <label class="form-check-label" for="Qualities">Vocals</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rankArtistTraits" value="1" id="trait3">
+                <label class="form-check-label" for="Qualities">Discography</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rankArtistTraits" value="1" id="trait4">
+                <label class="form-check-label" for="Qualities">Concerts</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rankArtistTraits" value="1" id="trait5">
+                <label class="form-check-label" for="Qualities">Consistency</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rankArtistTraits" value="1" id="trait6">
+                <label class="form-check-label" for="Qualities">Top songs</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rankArtistTraits" value="1" id="trait7">
+                <label class="form-check-label" for="Qualities">Collaborations</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rankArtistTraits" value="1" id="trait8">
+                <label class="form-check-label" for="Qualities">Flow</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rankArtistTraits" value="1" id="trait9">
+                <label class="form-check-label" for="Qualities">Socal impact</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="rankArtistTraits" value="1" id="trait10">
+                <label class="form-check-label" for="Qualities">Music videos</label>
+              </div>
+            </div>
+            <!-- Recommendation -->
+            <div class="form-group">
+              <label for="Recommendation">How Likely Would You Recommend This Artist? (1-10):</label>
+              <input type="number" id="rankRecommend" name="rankRecommend" min="1" max="10" class="form-control" required>
+            </div>
+  
+          </div>
+  
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button id="submitRankings" type="submit" class="btn btn-primary">Submit Rankings</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- info modal -->
+  <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h5 class="modal-title" id="infoModalArtistName">Artist Info</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+  
+        <div class="modal-body text-center">
+          <img id="infoModalArtistImage" src="" alt="Artist Image" style="width:150px;height:150px;" class="mb-3">
+          <ul class="list-group">
+            <li class="list-group-item"><strong>Current Rank:</strong> <span id="infoRank"></span></li>
+            <li class="list-group-item"><strong>Last Week's Rank:</strong> <span id="infoLastWeek"></span></li>
+            <li class="list-group-item"><strong>Peak Rank:</strong> <span id="infoPeak"></span></li>
+            <li class="list-group-item"><strong>Weeks on Chart:</strong> <span id="infoWeeks"></span></li>
+          </ul>
+        </div>
+  
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  <script>
+  
+    $('#rankingModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var name = button.data('name');
+      var image = button.data('image');
+  
+      var modal = $(this);
+      modal.find('#modalArtistName').text(name);
+      modal.find('#modalArtistImage').attr('src', image);
+    });
+  
+    document.getElementById("rankForm").addEventListener("submit", function (e) {
+      const rank1 = document.getElementById("rankLyrics").value;
+      const rank2 = document.querySelector('input[name="Replayability"]:checked');
+      const rank3 = document.getElementById("Relevancy").value;
+      const checked = document.querySelectorAll('.rankArtistTraits:checked');
+      let rank4 =0;
+      checked.forEach(trait =>{
+        rank4+=parseInt(trait.value);
+      });
+      const rank5 = parseInt(document.getElementById("rankRecommend").value);
+  
+      if (!rank1 || !rank2 || !rank3 || rank4.length === 0 || !rank5) {
+        e.preventDefault();
+        alert("Please fill in all ranking fields.");
+        return;
+      }
+  
+      if(rank1>10||rank5>10){
+        e.preventDefault();
+        alert("Ranking values cannot be greater than 10!")
+        return;
+      }
+      
+    });
+  </script> 
+  
+  <!-- info script -->
+  <script>
+    $('#infoModal').on('show.bs.modal', function (event) {
+     var button = $(event.relatedTarget);
+     var name = button.data('name');
+     var image = button.data('image');
+     var rank = button.data('rank');
+     var lastWeek = button.data('lastweek');
+     var peak = button.data('peak');
+     var weeks = button.data('weeks');
+  
+     var modal = $(this);
+     modal.find('#infoModalArtistName').text(name);
+     modal.find('#infoModalArtistImage').attr('src', image);
+     modal.find('#infoRank').text(rank);
+     modal.find('#infoLastWeek').text(lastWeek);
+     modal.find('#infoPeak').text(peak);
+     modal.find('#infoWeeks').text(weeks);
+   });
+  </script>
