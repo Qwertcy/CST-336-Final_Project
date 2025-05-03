@@ -3,41 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>artistsAvailable</title>
+  <title>Artists Available</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff; 
+    }
+    .card {
+      background-color: #1e1e1e; 
+      border: none;
+    }
+    .card-title, .card-text {
+      color: #ffffff; 
+    }
+    .card img {
+      width: 100%; 
+      height: 200px; 
+      object-fit: cover; 
+      border-radius: 10px;
+    }
+    .container {
+      margin-top: 50px;
+    }
+    .btn {
+      background-color: #007bff; 
+      color: #ffffff;
+    }
+    .btn:hover {
+      background-color: #0056b3; 
+    }
+  </style>
 </head>
 <body>
   <%- include("partials/nav.ejs") %>
   <%- include("partials/search.ejs") %>
 
-
-  <h1>artistsAvailable</h1>
-
-  <table border="1">
-    <thead>
-        <tr>
-            <th>Artist Name</th>
-            <th>Image</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <% for (let i = 0; i < rows.length; i++) { %>
-            <tr>
-                <td><%= rows[i].name %></td>
-                <td>
-                    <% if (rows[i].image) { %>
-                        <img src="<%= rows[i].image %>" alt="<%= rows[i].name %>" width="100">
-                    <% } else { %>
-                        No Image Available
-                    <% } %>
-                </td>
-                <td>
-                    <a href="/rankArtist/<%= rows[i].artist_id %>">Rank This Artist</a>
-                </td>
-            </tr>
-        <% } %>
-    </tbody>
-</table>
-  
+  <div class="container">
+    <h1 class="text-center mb-4">Artists Available</h1>
+    <div class="row">
+      <% for (let i = 0; i < rows.length; i++) { %>
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            <% if (rows[i].image) { %>
+              <img src="<%= rows[i].image %>" alt="<%= rows[i].name %>" class="card-img-top">
+            <% } else { %>
+              <div class="card-img-top text-center text-muted" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                No Image Available
+              </div>
+            <% } %>
+            <div class="card-body">
+              <h5 class="card-title"><%= rows[i].name %></h5>
+              <a href="/rankArtist/<%= rows[i].artist_id %>" class="btn btn-primary btn-block">Rank This Artist</a>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  </div>
 </body>
 </html>
