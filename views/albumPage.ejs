@@ -11,8 +11,6 @@
 <body>
   <%- include("partials/nav.ejs") %>
   <%- include("partials/search.ejs") %>
-
-
   <h1>albumPage</h1>
   <h1><%= albumInfo.name %></h1>
   <img id = "albumCoverImg" src="<%= albumInfo.images[0].url %>" alt="Album Cover"><br>
@@ -30,16 +28,12 @@
     data-image="<%= albumInfo.images[0].url %>">
     Rank Artist
   </button>
-
-
   <% } %> 
   <br>
   Release Date: <%= albumInfo.release_date %>
-
   <% for (let i = 0; i < albumInfo.tracks.items.length; i++) { %>
     
     
-
    <br>
    <a class="titles" href="<%= albumInfo.tracks.items[i].external_urls.spotify %>">
       <%= albumInfo.tracks.items[i].track_number %>. <%= albumInfo.tracks.items[i].name %>
@@ -55,19 +49,19 @@
       <div class="modal fade" id="rankingModal" tabindex="-1" role="dialog" aria-labelledby="rankingModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
           <div class="modal-content">
-            
+
             <div class="modal-header">
               <h5 class="modal-title" id="modalArtistName">Artist Name</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            
+
             <div class="modal-body">
               <div class="text-center">
                 <img id="modalArtistImage" src="" alt="Artist Image" style="width:150px;height:150px;">
               </div>
-      
+
               <div class="container mt-3">
                 <div class="row">
                   <div class="col">
@@ -86,14 +80,14 @@
                   </div>
                 </div>
               </div>
-      
+
             </div>
-      
+
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               <button id="submitRankings" type="button" class="btn btn-primary">Submit Rankings</button>
             </div>
-      
+
           </div>
         </div>
       </div>
@@ -154,6 +148,6 @@
 
 
 
-  
+
 </body>
 </html>

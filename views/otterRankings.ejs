@@ -15,156 +15,153 @@
 
   <h1>Otter Rankings</h1>
 
-            <% for (let i = 0; i < rows.length; i++) { %>
-                <div>
-
+  % for (let i = 0; i < rows.length; i++) { %>
+    <div>
         
-                    ID:  <%= rows[i].artist_id %> <br>
-                    Name:<%= rows[i].name %> <br>
-                    ovr: <%= rows[i].overall %> <br>
-                    Val1: <%= rows[i].val1 %> <br>
-                    Val2: <%= rows[i].val2%> <br>
-                    val3: <%= rows[i].val3 %> <br>
-                    val4: <%= rows[i].val4 %> <br>
-                    val5: <%= rows[i].val5 %> <br>
-
-                    
-                        <% if (rows[i].image) { %>
-                            <img src="<%= rows[i].image %>" alt="<%= rows[i].name %>" width="100">
-                        <% } else { %>
-                            No Image Available
-                        <% } %>
-                
-                        <button type="button" 
-                        class="btn btn-primary open-modal-btn" 
-                        data-toggle="modal" 
-                        data-target="#rankingModal"
-                        data-name="<%= rows[i].name %>" 
-                        data-image="<%= rows[i].image %>">
-                        Rank Artist</button>
-                    </div>
-            <% } %>
-
-            <!-- Rank Modal -->
-      <div class="modal fade" id="rankingModal" tabindex="-1" role="dialog" aria-labelledby="rankingModalTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-          <div class="modal-content">
-            
-            <div class="modal-header">
-              <h5 class="modal-title" id="modalArtistName">Artist Name</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            
-            <div class="modal-body">
-              <div class="text-center">
-                <img id="modalArtistImage" src="" alt="Artist Image" style="width:150px;height:150px;">
-              </div>
+      ID:  <%= rows[i].artist_id %> <br>
+      Name:<%= rows[i].name %> <br>
+      ovr: <%= rows[i].overall %> <br>
+      Val1: <%= rows[i].val1 %> <br>
+      Val2: <%= rows[i].val2%> <br>
+      val3: <%= rows[i].val3 %> <br>
+      val4: <%= rows[i].val4 %> <br>
+      val5: <%= rows[i].val5 %> <br>
       
-              <div class="container mt-3">
-                <div class="row">
-                  <div class="col">
-                    <p>Ranking 1:</p>
-                    <p>Ranking 2:</p>
-                    <p>Ranking 3:</p>
-                    <p>Ranking 4:</p>
-                    <p>Ranking 5:</p>
-                  </div>
-                  <div class="col">
-                    <input type="number" id="rank1" class="form-control mb-2">
-                    <input type="number" id="rank2" class="form-control mb-2">
-                    <input type="number" id="rank3" class="form-control mb-2">
-                    <input type="number" id="rank4" class="form-control mb-2">
-                    <input type="number" id="rank5" class="form-control mb-2">
-                  </div>
+          <% if (rows[i].image) { %>
+              <img src="<%= rows[i].image %>" alt="<%= rows[i].name %>" width="100">
+          <% } else { %>
+              No Image Available
+          <% } %>
+          <button type="button" 
+          class="btn btn-primary open-modal-btn" 
+          data-toggle="modal" 
+          data-target="#rankingModal"
+          data-name="<%= rows[i].name %>" 
+          data-image="<%= rows[i].image %>">
+          Rank Artist</button>
+      </div>
+<% } %>
+
+     <!-- Rank Modal -->
+     <div class="modal fade" id="rankingModal" tabindex="-1" role="dialog" aria-labelledby="rankingModalTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalArtistName">Artist Name</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="text-center">
+              <img id="modalArtistImage" src="" alt="Artist Image" style="width:150px;height:150px;">
+            </div>
+
+            <div class="container mt-3">
+              <div class="row">
+                <div class="col">
+                  <p>Ranking 1:</p>
+                  <p>Ranking 2:</p>
+                  <p>Ranking 3:</p>
+                  <p>Ranking 4:</p>
+                  <p>Ranking 5:</p>
+                </div>
+                <div class="col">
+                  <input type="number" id="rank1" class="form-control mb-2">
+                  <input type="number" id="rank2" class="form-control mb-2">
+                  <input type="number" id="rank3" class="form-control mb-2">
+                  <input type="number" id="rank4" class="form-control mb-2">
+                  <input type="number" id="rank5" class="form-control mb-2">
                 </div>
               </div>
-      
             </div>
-      
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button id="submitRankings" type="button" class="btn btn-primary">Submit Rankings</button>
-            </div>
-      
+
           </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button id="submitRankings" type="button" class="btn btn-primary">Submit Rankings</button>
+          </div>
+
         </div>
       </div>
+    </div>
 
-      <script>
-        $('#rankingModal').on('show.bs.modal', function (event) {
-          var button = $(event.relatedTarget);
-          var name = button.data('name');
-          var image = button.data('image');
-      
-          var modal = $(this);
-          modal.find('#modalArtistName').text(name);
-          modal.find('#modalArtistImage').attr('src', image);
-        });
-      
-        // submit button
-        document.getElementById("submitRankings").addEventListener("click", () => {
-          const ranks = [
-            document.getElementById("rank1").value,
-            document.getElementById("rank2").value,
-            document.getElementById("rank3").value,
-            document.getElementById("rank4").value,
-            document.getElementById("rank5").value
-          ];
-      
-      
-          const artistName = document.getElementById("modalArtistName").textContent;
-      
-      
-      
-          if (ranks.some(rank => rank === "")) {
-            alert("Please fill in all ranking fields before submitting!");
-            return;
-          }else{
-            fetch("/submitRankings", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ranks, artistName })  // must be stringified!
-              });
-          }
-      
-          console.log("Submitting rankings:", ranks);
-      
-          $('#rankingModal').modal('hide'); // close after submit
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-        });
-      </script>
-      <!-- info script -->
-      <script>
-         $('#infoModal').on('show.bs.modal', function (event) {
-          var button = $(event.relatedTarget);
-          var name = button.data('name');
-          var image = button.data('image');
-          var rank = button.data('rank');
-          var lastWeek = button.data('lastweek');
-          var peak = button.data('peak');
-          var weeks = button.data('weeks');
-      
-          var modal = $(this);
-          modal.find('#infoModalArtistName').text(name);
-          modal.find('#infoModalArtistImage').attr('src', image);
-          modal.find('#infoRank').text(rank);
-          modal.find('#infoLastWeek').text(lastWeek);
-          modal.find('#infoPeak').text(peak);
-          modal.find('#infoWeeks').text(weeks);
-        });
-      </script>
-      
+    <script>
+      $('#rankingModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var name = button.data('name');
+        var image = button.data('image');
+    
+        var modal = $(this);
+        modal.find('#modalArtistName').text(name);
+        modal.find('#modalArtistImage').attr('src', image);
+      });
+    
+      // submit button
+      document.getElementById("submitRankings").addEventListener("click", () => {
+        const ranks = [
+          document.getElementById("rank1").value,
+          document.getElementById("rank2").value,
+          document.getElementById("rank3").value,
+          document.getElementById("rank4").value,
+          document.getElementById("rank5").value
+        ];
+    
+    
+        const artistName = document.getElementById("modalArtistName").textContent;
+    
+    
+    
+        if (ranks.some(rank => rank === "")) {
+          alert("Please fill in all ranking fields before submitting!");
+          return;
+        }else{
+          fetch("/submitRankings", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ ranks, artistName })  // must be stringified!
+            });
+        }
+    
+        console.log("Submitting rankings:", ranks);
+    
+        $('#rankingModal').modal('hide'); // close after submit
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      });
+    </script>
+    <!-- info script -->
+    <script>
+       $('#infoModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var name = button.data('name');
+        var image = button.data('image');
+        var rank = button.data('rank');
+        var lastWeek = button.data('lastweek');
+        var peak = button.data('peak');
+        var weeks = button.data('weeks');
+    
+        var modal = $(this);
+        modal.find('#infoModalArtistName').text(name);
+        modal.find('#infoModalArtistImage').attr('src', image);
+        modal.find('#infoRank').text(rank);
+        modal.find('#infoLastWeek').text(lastWeek);
+        modal.find('#infoPeak').text(peak);
+        modal.find('#infoWeeks').text(weeks);
+      });
+    </script>
+
 
 </body>
 </html>

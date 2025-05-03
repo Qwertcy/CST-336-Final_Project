@@ -8,7 +8,6 @@
 <body>
   <%- include("partials/nav.ejs") %>
   <%- include("partials/search.ejs") %>
-
   <h1>individualRankings</h1>
     <table border="1">
         <thead>
@@ -31,13 +30,10 @@
                     <td><%= rows[i].val2 %></td>
                     <td><%= rows[i].val3 %></td>
                     <td><%= rows[i].val4 %></td>
-
                     <td><%= rows[i].val5 %></td>
-
                 </tr>
             <% } %>
         </tbody>
     </table>
-
 </body>
 </html>
