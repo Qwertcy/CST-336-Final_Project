@@ -11,7 +11,7 @@ app.use(express.static("public"));
 import SpotifyWebApi from 'spotify-web-api-node';
 
 
- 
+
 // const pool = mysql.createPool({
 //     host: "daniel-martinez.site",
 //     user: "danielm4_webuser",
@@ -30,8 +30,8 @@ const pool = mysql.createPool({
     database: "estebanm_otter_rankings",
     connectionLimit: 10,
     waitForConnections: true
- });
- const conn = await pool.getConnection();
+});
+const conn = await pool.getConnection();
 
 app.use(express.urlencoded({extended:true}));
 app.set('trust proxy', 1) // trust first proxy
@@ -44,31 +44,31 @@ app.use(session({
 
 //spotify credentials for estebans developer account
 var spotifyApi = new SpotifyWebApi({
-  clientId: '7b61b1d7b1b44e9b9e55b957ebab9e5e',
-  clientSecret: '99760b39f0004adb940f448c885e8a26',
-//   redirectUri: 'https://esteban-martinez.tech'
+    clientId: '7b61b1d7b1b44e9b9e55b957ebab9e5e',
+    clientSecret: '99760b39f0004adb940f448c885e8a26',
+  //   redirectUri: 'https://esteban-martinez.tech'
   redirectUri: 'http://localhost:3000'
 
 });
 
 async function setAccessToken() {
-    try {
-      const data = await spotifyApi.clientCredentialsGrant();
-      const token = data.body['access_token'];
-      spotifyApi.setAccessToken(token);
-    //   console.log('Access token generated and set:', token);
-    } catch (error) {
-      console.error('Failed to retrieve access token', error);
+      try {
+        const data = await spotifyApi.clientCredentialsGrant();
+        const token = data.body['access_token'];
+        spotifyApi.setAccessToken(token);
+      //   console.log('Access token generated and set:', token);
+      } catch (error) {
+        console.error('Failed to retrieve access token', error);
+      }
     }
-  }
+    
 
-  
-setAccessToken();
-export default spotifyApi;
-
+  setAccessToken();
+  export default spotifyApi;
 
 
-app.use(express.json());
+
+  app.use(express.json());
 
 app.listen(3000, () => {
     console.log('server started');
@@ -76,7 +76,7 @@ app.listen(3000, () => {
 
 
 
-//the home view
+ //the home view
   // renders the top artists
 app.get('/', async (req, res) => {
 
@@ -88,18 +88,20 @@ app.get('/', async (req, res) => {
     res.render("home.ejs" , {topX})
 
     await backgroundFunctions();
-  
-  });
 
-  app.get('/otterRankings', async (req, res) => {
-    //use the fucntion below for query to get all our rankings
-    let rows = await getOtterOrder();
-    // console.log("/otterRankings");
-    // console.log(rows);
-    //TODO: get the array from the funciton above and pass to the view
-    res.render("otterRankings.ejs", {rows});
-  
+
 });
+
+app.get('/otterRankings', async (req, res) => {
+  //use the fucntion below for query to get all our rankings
+  let rows = await getOtterOrder();
+  // console.log("/otterRankings");
+  // console.log(rows);
+  //TODO: get the array from the funciton above and pass to the view
+  res.render("otterRankings.ejs", {rows});
+
+});
+
 app.get('/individualRankings',  isAuth ,async (req, res) => {
     //use the fucntion below for a query to get all of a users rankings
     let userId = req.session.userId;
@@ -206,14 +208,14 @@ app.get('/login', async(req, res) => {
 });
 
 app.post('/login', async(req, res) => {
-   let username = req.body.username;
-    let password = req.body.password; 
-    let hashedPassword = "";
-
-    let sql = `SELECT * FROM users WHERE user_name = ?`
+    let username = req.body.username;
+     let password = req.body.password; 
+     let hashedPassword = "";
+ 
+     let sql = `SELECT * FROM users WHERE user_name = ?`
         // let sql = `SELECT * FROM users`
 
-      
+
     const [rows] = await pool.query(sql, [username]);
 
 
@@ -242,7 +244,7 @@ app.post('/signup', async (req, res) => {
 
     try {
        let checkUserSql = `SELECT * FROM users WHERE user_name = ?`;
-        const [existingUser] = await pool.query(checkUserSql, [username]);
+       const [existingUser] = await pool.query(checkUserSql, [username]);
 
         if (existingUser.length > 0) {
             return res.render('signup.ejs', { error: 'Username already exists' });
@@ -274,9 +276,9 @@ app.post('/submitRankings', async  (req, res) => {
     const [checkRows] = await pool.query(checkSql, [artistId]);
 
     if (checkRows.length === 0) {
-    
+
         const [artistData] = await getArtistFromSpotify([artistId]);
-    
+
         if (artistData) {
             await pushArtistsToDb([artistData]);
         } else {
@@ -306,8 +308,8 @@ app.post('/submitRankings', async  (req, res) => {
 
       }
 
-    
-      
+
+
       res.redirect('/individualRankings');
 
   });
@@ -331,10 +333,10 @@ function isAuth(req , res, next){
         res.redirect("/login")
     }
  }
- 
 
 
-//put all the background functions we need when we load into one so we can call it 
+
+ //put all the background functions we need when we load into one so we can call it 
     // and keep the page loading functions cleaner.
     //also incase we need to move all this to an external file.
 async function backgroundFunctions(){
@@ -366,18 +368,18 @@ async function backgroundFunctions(){
             artistMissing.push(id);
         }
     }
-    //gets all the info we need from spotify 
+ //gets all the info we need from spotify 
 
-    if (artistMissing.length > 0 ) {
-        let newArtistData =  await getArtistFromSpotify(artistMissing);
+ if (artistMissing.length > 0 ) {
+    let newArtistData =  await getArtistFromSpotify(artistMissing);
 
-        // console.log(newArtistData);
-        console.log("added: "+ newArtistData.length);
-    
-        //passes the new artist array into our database
-        await pushArtistsToDb(newArtistData);
-    
-    }
+    // console.log(newArtistData);
+    console.log("added: "+ newArtistData.length);
+
+    //passes the new artist array into our database
+    await pushArtistsToDb(newArtistData);
+
+}
 
 }
 
@@ -385,7 +387,7 @@ async function backgroundFunctions(){
   //takes in an arguement size: that sets the amount
   //of artist we want
   //returns an array 
-async function top100Request(size){
+  async function top100Request(size){
 
     let url = `https://raw.githubusercontent.com/KoreanThinker/billboard-json/main/billboard-artist-100/recent.json`;
     let response = await fetch(url);
@@ -435,19 +437,19 @@ async function nameToId(name) {
     //should return a map fo faster acces times
 
     //TODO: change to async when we call ana actual query
-async function getAllArtistFromOurDb() {
+    async function getAllArtistFromOurDb() {
 
-    let sql = `SELECT artist_id , name FROM artists`;
-    const [rows] = await pool.query(sql);
-    console.log(rows);
-    console.log('getAllArtistFromOurDb');
-
-    //TODO: get pur query data and put it in a hashMap to return
-    // let mockRows = {};
+        let sql = `SELECT artist_id , name FROM artists`;
+        const [rows] = await pool.query(sql);
+        console.log(rows);
+        console.log('getAllArtistFromOurDb');
+    
+        //TODO: get pur query data and put it in a hashMap to return
+        // let mockRows = {};
     let artistMap = {};
 
 
-    // mockRows["3TVXtAsR1Inumwj472S9r4"] = "Drake";
+     // mockRows["3TVXtAsR1Inumwj472S9r4"] = "Drake";
     // mockRows["74KM79TiuVKeVCqs8QtB0B"] = "Sabrina Carpenter";
     // mockRows["7tYKF4w9nC0nq9CsPZTHyP"] = "SZA";
     // mockRows["246dkjvS1zLTtiykXe5h60"] = "Post Malone";
@@ -462,40 +464,40 @@ async function getAllArtistFromOurDb() {
     }
 
     return artistMap;
-   
+
 }
 
 //this allows us to call for multiple artists from spotify
     //params: array of artistIds
     //returns array of spotify API call
-async function getArtistFromSpotify(arrayOfArtistId) {
-    try {
-        const data = await spotifyApi.getArtists(arrayOfArtistId);
-        return data.body.artists; // array of artist objects
-      } catch (err) {
-        console.error('Error fetching artists:', err);
-        return [];
+    async function getArtistFromSpotify(arrayOfArtistId) {
+        try {
+            const data = await spotifyApi.getArtists(arrayOfArtistId);
+            return data.body.artists; // array of artist objects
+          } catch (err) {
+            console.error('Error fetching artists:', err);
+            return [];
+          }
+        
+    }
+
+    //API call to get album info by passing in the spotify album ID
+    async function getAlbum(albumId) {
+        // console.log("album Id at the getAlbum ",albumId );
+
+        try {
+            let data = await spotifyApi.getAlbum(albumId);
+            // console.log("API Call for an albums data.body.tracks.items",data.body.tracks.items);
+            let albumInfo =  data.body;
+            return albumInfo;
+          } catch (error) {
+            // console.error('Error searching for album Info:', error);
+            return null;
+          }
       }
-    
-}
-
-//API call to get album info by passing in the spotify album ID
-async function getAlbum(albumId) {
-    // console.log("album Id at the getAlbum ",albumId );
-
-    try {
-        let data = await spotifyApi.getAlbum(albumId);
-        // console.log("API Call for an albums data.body.tracks.items",data.body.tracks.items);
-        let albumInfo =  data.body;
-        return albumInfo;
-      } catch (error) {
-        // console.error('Error searching for album Info:', error);
-        return null;
-      }
-  }
 
 
-//This is how we will push the spotify data that we get to our db
+      //This is how we will push the spotify data that we get to our db
     //it is the same thing we have been doing in class but longer lol
     //it acts like a string builder to build one long query as needed
     //and we still avoid an SQL injection, by keeping our arr of params
@@ -504,7 +506,7 @@ async function getAlbum(albumId) {
     //params: a spotify array of artist data that has already been filtered to 
     //avoid trying to push the same artist.
 
-  
+
     //TODO: make async when we run a real query
 async function pushArtistsToDb(arrayOfArtist) {
 
@@ -530,13 +532,13 @@ async function pushArtistsToDb(arrayOfArtist) {
     // sql += params.join(', ');
     // console.log(sql);
 
-    // TODO: uncomment this next line when we actually run a query
-    const [rows] = await pool.query(sql, params);    
-    return rows;
-}
+     // TODO: uncomment this next line when we actually run a query
+     const [rows] = await pool.query(sql, params);    
+     return rows;
+ }
 
 
-//sql query to get all artists in our datbase that have been ranked
+ //sql query to get all artists in our datbase that have been ranked
     //uses a left join to get artist info and their rankings
     //i used the join so we can get the images and all that in one call
 
@@ -548,26 +550,26 @@ async function getAllDbRankings(){
                 FROM total_rankings AS o 
                 LEFT JOIN artists AS a ON a.artist_id = o.artist_id
                 WHERE o.overall IS NOT NULL`;
-    
-    const [rows] = await pool.query(sql);
-    // console.log("getAllDbRankings");
-    // console.log(rows);
-    return rows;
 
-}
+                const [rows] = await pool.query(sql);
+                // console.log("getAllDbRankings");
+                // console.log(rows);
+                return rows;
+            
+            }
 async function getOtterOrder(){
-
+            
     let sql = `SELECT * 
                 FROM total_rankings AS o 
                 LEFT JOIN artists AS a ON a.artist_id = o.artist_id
                 WHERE o.overall IS NOT NULL
                 ORDER BY  o.overall DESC `;
-    
-    const [rows] = await pool.query(sql);
-    // console.log("getAllDbRankings");
-    // console.log(rows);
-    return rows;
-
+        
+            const [rows] = await pool.query(sql);
+                // console.log("getAllDbRankings");
+                // console.log(rows);
+                return rows;
+            
 }
 
 
@@ -578,22 +580,22 @@ async function getOtterOrder(){
         //put arguemnts in array
         //make async
 
-async function getUsersRankings(userId){
-    let sql = `SELECT a.name AS artist_name, u.overall, u.val1, u.val2, u.val3, u.val4, u.val5
+        async function getUsersRankings(userId){
+            let sql = `SELECT a.name AS artist_name, u.overall, u.val1, u.val2, u.val3, u.val4, u.val5
                FROM user_rankings AS u
                JOIN artists AS a ON u.artist_id = a.artist_id
-               WHERE u.user_id = ?
+                          WHERE u.user_id = ?
                ORDER BY u.overall DESC`;
 
 
- 
+
     const [rows] = await pool.query(sql, [userId]);
 
     // console.log("getUsersRankings");
     // console.log(rows)
 
     return rows;
-            
+
 }
 
 
@@ -604,43 +606,43 @@ async function getUsersRankings(userId){
 
     //TODO: make async
 
-async function artistsToRank(userId){
-    let sql = `SELECT * 
-                FROM artists AS a
-                LEFT JOIN user_rankings AS u ON a.artist_id = u.artist_id 
-                AND u.user_id = ?
-                WHERE u.overall IS NULL`;
-
-                // let sql = `SELECT * 
-                //             FROM artists AS a
-                //             LEFT JOIN user_rankings AS u 
-                //             ON a.artist_id = u.artist_id AND u.user_id = ?
-                //             WHERE u.user_id IS NULL;`;
-
+    async function artistsToRank(userId){
+        let sql = `SELECT * 
+                    FROM artists AS a
+                    LEFT JOIN user_rankings AS u ON a.artist_id = u.artist_id 
+                    AND u.user_id = ?
+                    WHERE u.overall IS NULL`;
     
-    let sqlParams =[`${userId}`];
-    const [rows] = await pool.query(sql, sqlParams );
-    return rows;
-    // const [rows] = await conn.query(sql, [userId] );
-
-    // console.log("artistsToRank");
-    // console.log(rows)
-}
+                    // let sql = `SELECT * 
+                    //             FROM artists AS a
+                    //             LEFT JOIN user_rankings AS u 
+                    //             ON a.artist_id = u.artist_id AND u.user_id = ?
+                    //             WHERE u.user_id IS NULL;`;
+    
+    
+        let sqlParams =[`${userId}`];
+        const [rows] = await pool.query(sql, sqlParams );
+        return rows;
+        // const [rows] = await conn.query(sql, [userId] );
+    
+        // console.log("artistsToRank");
+        // console.log(rows)
+    }
 
 //This fucntion is a sql query that returns the exact artist overall rankings
     //the parameter is the primary key / the spotify id (same thing)
 
     //TODO : make async
-async function getSingleArtistRankings(artistId){
+    async function getSingleArtistRankings(artistId){
 
-    let sql = `SELECT *
-                FROM total_rankings
-                WHERE artist_id = ?`;
-    
-    let sqlParams =[`${artistId}`];
-    const [rows] = await pool.query(sql, sqlParams );
-    return rows;
-}
+        let sql = `SELECT *
+                    FROM total_rankings
+                    WHERE artist_id = ?`;
+
+                    let sqlParams =[`${artistId}`];
+                    const [rows] = await pool.query(sql, sqlParams );
+                    return rows;
+                }
 
 
 //this function gets a users ranking of a specific artist
@@ -650,13 +652,154 @@ async function getSingleArtistRankings(artistId){
     //these fucniton names are getting worse lol
     //parameters are the artist primary key (spotify id)
     //and the user ID
-async function specificArtistRanking( userId, artistId) {
-  const sql = `SELECT * 
-               FROM user_rankings
-               WHERE user_id = ? AND artist_id = ?`;
+    async function specificArtistRanking( userId, artistId) {
+        const sql = `SELECT * 
+                     FROM user_rankings
+                     WHERE user_id = ? AND artist_id = ?`;
+      
+        const sqlParams = [userId, artistId];
+        const [rows] = await pool.query(sql, sqlParams);
+        return rows;
+      }
+      
 
-  const sqlParams = [userId, artistId];
-  const [rows] = await pool.query(sql, sqlParams);
-  return rows;
-}
-
+      async function deleteUserRanking(artistId, userId) {
+        const sql = `DELETE FROM user_rankings 
+                     WHERE artist_id = ? AND user_id = ?`;
+        const sqlParams = [artistId, userId];
+        await pool.query(sql, sqlParams);
+    
+      }
+    
+    
+      async function addUserRanking(artistId, userId, val1, val2, val3, val4, val5) {
+    
+        let overall = (val1+ val2+ val3+ val4+ val5) / 5 ;
+    
+        const sql = `INSERT INTO user_rankings 
+                     (artist_id, user_id, overall, val1, val2, val3, val4, val5)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    
+        const sqlParams = [artistId, userId, overall, val1, val2, val3, val4, val5];
+        await pool.query(sql, sqlParams);
+      }
+    
+    
+      async function getUserRawRankings(userId, artistId) {
+    
+        const sql = `SELECT artist_id, overall, val1, val2, val3, val4, val5
+                     FROM user_rankings
+                     WHERE user_id = ? AND artist_id = ?`;
+    
+        const [rows] = await pool.query(sql, [userId, artistId]);
+    
+        return rows;
+      }
+    
+      async function getTotalArtistRankings(artistId) {
+    
+        const sql = `SELECT artist_id, times_ranked, overall, val1, val2, val3, val4, val5
+                     FROM total_rankings
+                     WHERE artist_id = ?`;
+    
+        const [rows] = await pool.query(sql, [artistId]);
+        return rows;
+      }
+    
+    
+    
+    
+    
+    async function updateTotalRanking(userId, artistId, val1, val2, val3, val4, val5) {
+    
+        let currentRating = await getUserRawRankings(userId, artistId); // users current rating
+        let currTotals = await getTotalArtistRankings(artistId); // totals
+    
+        if (currTotals.length < 1) {
+            await pool.query(
+                `INSERT INTO total_rankings (artist_id, times_ranked, overall, val1, val2, val3, val4, val5)
+                 VALUES (?, 0, 0, 0, 0, 0, 0, 0)`, [artistId]
+            );
+            currTotals = await getTotalArtistRankings(artistId);
+        }
+    
+    
+        if (currentRating.length < 1) {
+            let timesRanked = currTotals[0].times_ranked ?? 0;
+    
+            let val_1 = currTotals[0].val1 ?? 0;
+            let val_2 = currTotals[0].val2 ?? 0;
+            let val_3 = currTotals[0].val3 ?? 0;
+            let val_4 = currTotals[0].val4 ?? 0;
+            let val_5 = currTotals[0].val5 ?? 0;
+    
+            let new1 = (val_1 * timesRanked) + val1;
+            let new2 = (val_2 * timesRanked) + val2;
+            let new3 = (val_3 * timesRanked) + val3;
+            let new4 = (val_4 * timesRanked) + val4;
+            let new5 = (val_5 * timesRanked) + val5;
+    
+            timesRanked += 1;
+    
+            let newVal1 = new1 / timesRanked;
+            let newVal2 = new2 / timesRanked;
+            let newVal3 = new3 / timesRanked;
+            let newVal4 = new4 / timesRanked;
+            let newVal5 = new5 / timesRanked;
+            let newOverall = (newVal1 + newVal2 + newVal3 + newVal4 + newVal5) / 5;
+    
+            await updateTotalDb(artistId, timesRanked, newOverall, newVal1, newVal2, newVal3, newVal4, newVal5);
+        } else {
+          // Updating existing rating
+          let timesRanked = currTotals[0].times_ranked;
+    
+          let old = currentRating[0];
+    
+          let total1 = currTotals[0].val1 * timesRanked;
+          let total2 = currTotals[0].val2 * timesRanked;
+          let total3 = currTotals[0].val3 * timesRanked;
+          let total4 = currTotals[0].val4 * timesRanked;
+          let total5 = currTotals[0].val5 * timesRanked;
+    
+          // Subtract the old rating values
+          total1 -= old.val1;
+          total2 -= old.val2;
+          total3 -= old.val3;
+          total4 -= old.val4;
+          total5 -= old.val5;
+    
+          // Add new values
+          total1 += val1;
+          total2 += val2;
+          total3 += val3;
+          total4 += val4;
+          total5 += val5;
+    
+          // Re-average
+          let newVal1 = total1 / timesRanked;
+          let newVal2 = total2 / timesRanked;
+          let newVal3 = total3 / timesRanked;
+          let newVal4 = total4 / timesRanked;
+          let newVal5 = total5 / timesRanked;
+          let newOverall = (newVal1 + newVal2 + newVal3 + newVal4 + newVal5) / 5;
+    
+          await updateTotalDb(artistId, timesRanked, newOverall, newVal1, newVal2, newVal3, newVal4, newVal5);
+        }
+    
+    
+      }
+    
+    
+      async function updateTotalDb(artistId, timesRanked, overall, val1, val2, val3, val4, val5) {
+        const sql = `
+          UPDATE total_rankings
+          SET times_ranked = ?, overall = ?, val1 = ?, val2 = ?, val3 = ?, val4 = ?, val5 = ?
+          WHERE artist_id = ?
+        `;
+    
+        const params = [timesRanked, overall, val1, val2, val3, val4, val5, artistId];
+    
+          await pool.query(sql, params);
+    
+      }
+    
