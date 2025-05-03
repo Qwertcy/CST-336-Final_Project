@@ -188,6 +188,12 @@ app.get('/login', async(req, res) => {
    res.render('login.ejs')
 });
 
+app.get('/logout', async(req, res) => {
+   req.session.destroy();
+   res.redirect("/")
+});
+
+
 app.post('/login', async(req, res) => {
    let username = req.body.username;
     let password = req.body.password; 
