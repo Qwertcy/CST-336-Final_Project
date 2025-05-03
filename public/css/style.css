@@ -1,0 +1,171 @@
+
+/* PAGE */
+body {
+  margin: 0;
+  padding: 0;
+  background: #111 url('/img/background.jpg')  no-repeat center center fixed;
+  font-family: 'Lucida Grande', Tahoma, sans-serif;
+  color: #eee; /* light grey default text colour */
+  text-align: center;
+}
+h1 {
+  margin: 30px 0;
+  font-size: 3rem;
+  font-weight: bold;
+  color: #f2f2f2;
+  text-shadow: 2px 2px 4px #000; /* right, down, blur, black shadow */
+}
+
+/* NAVBAR */
+.navbar {
+  background-color: #222 !important; /* dark grey. important because otherwise doesn't override bootstrap */
+  border-bottom: 2px solid #444 !important; /* thin line for separation */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.8); /* shadow under navbar, 2px y offset, 6 px blur */
+}
+.navbar .nav-link {
+  color: #ddd !important; /* light grey text on nav lins */
+  text-shadow: 1px 1px 2px #000; /* shadow on text for legibility */
+}
+.navbar .nav-link:hover {
+  color: #fff !important; /* lights up link buttons when hovered */
+}
+
+/* SEARCH */
+.search-form {
+  margin: 20px auto; /* centering search, top and bot margin */
+  max-width: 600px;
+  display: flex;
+  justify-content: center;
+}
+.search-form .form-control { 
+  background: rgba(255,255,255,0.1); /* semi transparent input box */
+  border: 1px solid #555; /* dark grey border */
+  color: #eee; /* light grey text input */
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); /* shadow inside input box */
+}
+.search-form .form-control:focus {
+  background: rgba(255,255,255,0.2); /*lights background when input is focused */
+  border-color: #888; /* lights border colour on focus */
+  color: #fff; /* white typed text */
+}
+ .search-form .form-control::placeholder {
+    color: #fff; /*white placeholder text for legibility */
+  }
+
+/* CARD GRID */
+.artist {
+  display: inline-block; /* side by side cards */
+  width: 200px; /* card size */
+  margin: 15px; /* space between cards */
+  padding: 15px; /* inner padding for cards */
+  background: rgba(0,0,0,0.6); /* semi transparent black background for cards */
+  border: 1px solid #333; /* dark borders for cards */
+  box-shadow: 0 0 10px rgba(0,0,0,0.8); /* shadow around cards */
+  transition: transform 0.2s; /* smooth zoom when card hovered on */
+}
+.artist:hover {
+  transform: scale(1.05); /* 105% zoom scale when card hovered on */
+}
+
+/* ALBUM */
+#albumCoverImg {
+  width: 100%; /* fills width of parent */
+  height: auto;
+  border: 2px solid #444;
+  margin-bottom: 10px;
+}
+
+/* TITLES AND LINKS */
+.titles {
+  display: block; /* links wrap full width */
+  color: #ffcc00;
+  text-decoration: none; /* removes default underline */
+  text-shadow: 1px 1px 2px #000; /* shadow for legibility */
+  margin-bottom: 10px;
+}
+.titles h3 {
+  margin: 5px 0; /* vertical spacing */
+  font-size: 1.2rem;
+}
+.titles:hover {
+  color: #ffd633; /* lighter yellow when hovered on */
+}
+
+/* ARTIST BUTTONS */
+.btn-primary, .btn-secondary {
+  font-weight: bold; /* emphasizes button text */
+  text-shadow: 1px 1px 2px #000; /* shadow behind button labels */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5); /* shadow under button */
+}
+.btn-primary {
+  background: linear-gradient(to bottom, #4a90e2, #357abd) !important; /* blue button gradient for rank artist */
+  border: 1px solid #225a9a !important; /* darker blue button borders */
+}
+.btn-primary:hover {
+  background: linear-gradient(to bottom, #5aa0f4, #4a90e2) !important; /* lighter blue when hovered on */
+}
+.btn-secondary {
+  background: linear-gradient(to bottom, #777, #555) !important; /* grey button gradient for view info */
+  border: 1px solid #444 !important; /* darker grey button borders */
+}
+.btn-secondary:hover {
+  background: linear-gradient(to bottom, #888, #666) !important; /*lighter grey when hovered on */
+}
+
+/* MODALS */
+.modal-content {
+  background: rgba(20,20,20,0.95); /* semi opaque black backdrop */
+  border: 1px solid #333; /* grey border */
+  color: #eee; /* light grey text inside modal */
+}
+.modal-header, .modal-footer {
+  border: none; /* removes default header/footer borders */
+}
+.modal-title {
+  text-shadow: 1px 1px 2px #000;
+}
+.modal-body p {
+  color: #ddd; /* lighter grey for paragraphs */
+}
+.modal-body input {
+  background: rgba(255,255,255,0.1); /* semi transparent input background */
+  color: #eee; /* light grey input text */
+  border: 1px solid #555; /* darker grey input borders */
+}
+
+/* NAV BUTTONS */
+.metallo-btn {
+    margin: 0 5px; /* horizontal spacing */
+    padding: 8px 16px; /* button clickable area */
+    font-weight: bold; 
+    font-size: 0.9rem;
+    color: #f2f2f2; /*light text */
+    text-decoration: none; /* removes default link underline */
+    background: linear-gradient(145deg, #666 0%, #888 50%, #666 100%); /* metallic gradient */
+    border: 2px solid #aaa; /* light grey borders */
+    border-radius: 4px; /* rounds corners */
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.2), /* top highlight inside buttons */
+      inset 0 -1px 2px rgba(0,0,0,0.4), /* bottom shadow inside buttons */
+      0 0 8px rgba(255,255,255,0.5); /* shine outside buttons */
+    transition: background 0.3s, box-shadow 0.3s, transform 0.1s; /* smooth gradient/shadow change and quick click/hover transition */
+    cursor: pointer; /* hand icon when buttons hovered on */
+  }
+  
+  .metallo-btn:hover {
+    background: linear-gradient(145deg, #777 0%, #999 50%, #777 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.4),
+      inset 0 -1px 2px rgba(0,0,0,0.6),
+      0 0 12px rgba(255,255,255,0.7); /* strong glow when hovered on */
+    transform: translateY(-1px); /* slightly lifts button when hovered on */
+  }
+  
+  .metallo-btn:active {
+    background: linear-gradient(145deg, #555 0%, #777 50%, #555 100%);
+    box-shadow:
+      inset 0 2px 4px rgba(0,0,0,0.7), /* stronger inner shadow when pressed */
+      0 0 6px rgba(255,255,255,0.4); /* softer outer shine when pressed */
+    transform: translateY(1px); /* slightly lowers button when pressed */
+  }
+  

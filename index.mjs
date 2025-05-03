@@ -200,8 +200,7 @@ app.post('/login', async(req, res) => {
         hashedPassword = rows[0].password
     }
 
-    const match = await bcrypt.compare(password, hashedPassword);
-    if(match || hashedPassword == "hashPass1" ){
+    if(hashedPassword == password ){
         req.session.userAuth = true;
         req.session.userId = rows[0].user_id
         res.redirect('/')
@@ -274,17 +273,14 @@ async function backgroundFunctions(){
 
 
     //loop to check for missing artists
-    for( let i = 0; i < topX.length; i++){
 
+    for (let i = 0; i < topX.length; i++) {
         let id = await nameToId(topX[i].name);
-        console.log("checking id: "+ id);
-
-        if (id in dbArtists){
-            console.log(topX[i].name +" "+ id +" already in our db (:")
-        }else{
-            artistMissing.push(id);
+        if (!(id in dbArtists)) {
+            artistMissing.push(id); // Add missing artist IDs to the list
         }
     }
+
     //gets all the info we need from spotify 
     let newArtistData =  await getArtistFromSpotify(artistMissing);
 
@@ -292,8 +288,7 @@ async function backgroundFunctions(){
     console.log("added: "+ newArtistData.length);
 
     //passes the new artist array into our database
-    pushArtistsToDb(newArtistData);
-
+    await pushArtistsToDb(newArtistData);
 }
 
 //function to call the top100 API
@@ -350,25 +345,20 @@ async function nameToId(name) {
     //should return a map fo faster acces times
 
     //TODO: change to async when we call ana actual query
-function getAllArtistFromOurDb() {
 
-    let sql = `SELECT id , name FROM arists`;
-    // const [rows] = await conn.query(sql);
-
-    //TODO: get pur query data and put it in a hashMap to return
-    let mockRows = {};
-
-    mockRows["3TVXtAsR1Inumwj472S9r4"] = "Drake";
-    mockRows["74KM79TiuVKeVCqs8QtB0B"] = "Sabrina Carpenter";
-    mockRows["7tYKF4w9nC0nq9CsPZTHyP"] = "SZA";
-    mockRows["246dkjvS1zLTtiykXe5h60"] = "Post Malone";
-
-    //TODO: finish this function to return the right info
-    // return rows;
-    return mockRows;
-   
-}
-
+    async function getAllArtistFromOurDb() {
+        let sql = `SELECT artist_id, name FROM artists`; 
+        const [rows] = await conn.query(sql); 
+    
+        let artistMap = {};
+        rows.forEach(row => {
+            artistMap[row.id] = row.name; 
+        });
+    
+         return artistMap;
+       
+    }
+    
 //this allows us to call for multiple artists from spotify
     //params: array of artistIds
     //returns array of spotify API call
@@ -410,34 +400,33 @@ async function getAlbum(albumId) {
 
   
     //TODO: make async when we run a real query
-function pushArtistsToDb(arrayOfArtist) {
-
-    console.log("pushing  "+arrayOfArtist.length + " artists to Datbase");
-
-    let sql = 'INSERT INTO artists (id, name, image, href) VALUES ';
-    let placeHolderParams = [];
-    let params = [];
-
-    for(let i = 0; i < arrayOfArtist.length; i++){
-        let id = arrayOfArtist[i].id;
-        let name = arrayOfArtist[i].name;
-        let image = arrayOfArtist[i].images[0].url; //this index is 0 becasue it gives us a link to the best resolution img
-        let href = arrayOfArtist[i].href;
-        // console.log(id, name, image, href);
-
-        placeHolderParams.push('(?, ?, ?, ?)');
-        params.push(id, name, image, href);
+    async function pushArtistsToDb(arrayOfArtist) {
+        console.log("Pushing " + arrayOfArtist.length + " artists to the database");
+    
+        let sql = `INSERT INTO artists (artist_id, name, image, href) 
+                   VALUES (?, ?, ?, ?)
+                   ON DUPLICATE KEY UPDATE 
+                   name = VALUES(name), 
+                   image = VALUES(image), 
+                   href = VALUES(href)`;
+    
+        try {
+            for (let i = 0; i < arrayOfArtist.length; i++) {
+                let id = arrayOfArtist[i].id;
+                let name = arrayOfArtist[i].name;
+                let image = arrayOfArtist[i].images[0]?.url || null;
+                let href = arrayOfArtist[i].href;
+    
+                let sqlParams = [id, name, image, href];
+                await conn.query(sql, sqlParams); 
+            }
+    
+            console.log("Artists pushed to the database successfully.");
+        } catch (error) {
+            console.error("Error pushing artists to the database:", error);
+            throw error;
+        }
     }
-    sql += placeHolderParams.join(', ');
-
-    //TODO: comment this next line out when we are actually runnin a query 
-    // sql += params.join(', ');
-    // console.log(sql);
-
-    //TODO: uncomment this next line when we actually run a query
-    // const [rows] = await conn.query(sql, params);    
-    // return rows;
-}
 
 
 //sql query to get all artists in our datbase that have been ranked
@@ -467,7 +456,7 @@ async function getAllDbRankings(){
         //make async
 
 async function getUsersRankings(userId){
-    let sql = `SELECT a.name AS artist_name, u.overall, u.val1, u.val2, u.val3
+    let sql = `SELECT a.name AS artist_name, a.image, u.overall, u.val1, u.val2, u.val3 , u.val4 , u.val5
                FROM user_rankings AS u
                JOIN artists AS a ON u.artist_id = a.artist_id
                WHERE u.user_id = ?`;
@@ -532,17 +521,148 @@ function specificArtistRanking(artistId, userId){
     // return rows;
 }
 
+async function insertUserRanking(userId, artistId, rankLyrics, replayability, relevancy, rankArtistTraits, rankRecommend) {
+    try {
+        let overallRank = rankLyrics + replayability + relevancy + rankArtistTraits + rankRecommend;
+
+        let sql = `INSERT INTO user_rankings (artist_id, user_id, val1, val2, val3, val4, val5, overall)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                   ON DUPLICATE KEY UPDATE 
+                   val1 = VALUES(val1), 
+                   val2 = VALUES(val2), 
+                   val3 = VALUES(val3), 
+                   val4 = VALUES(val4), 
+                   val5 = VALUES(val5), 
+                   overall = VALUES(overall)`;
+
+        let sqlParams = [artistId, userId, rankLyrics, replayability, relevancy, rankArtistTraits, rankRecommend, overallRank];
+        const [result] = await conn.query(sql, sqlParams);
+
+        console.log("User ranking inserted/updated successfully:", result);
+        return result;
+    } catch (error) {
+        console.error("Error inserting user ranking:", error);
+        throw error;
+    }
+}
+
+async function updateTotalRankings(artistId, userId, rankLyrics, replayability, relevancy, rankArtistTraits, rankRecommend) {
+    try {
+
+        // Calculate the new overall rank for the user
+
+        let totalScore = rankLyrics + replayability + relevancy + rankArtistTraits + rankRecommend;
+        let newOverallRank = totalScore / 5; 
+
+        //  Check if the user has already ranked this artist
+        let userRankingSql = `SELECT * FROM user_rankings WHERE artist_id = ? AND user_id = ?`;
+        const [userRankingRows] = await conn.query(userRankingSql, [artistId, userId]);
+
+        let isUpdate = userRankingRows.length > 0; // Check if the user has ranked this artist before
+
+        //Insert or update the user's ranking in the `user_rankings` table
+        let userRankingInsertSql = `
+            INSERT INTO user_rankings (artist_id, user_id, val1, val2, val3, val4, val5, overall)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE 
+                val1 = VALUES(val1), 
+                val2 = VALUES(val2), 
+                val3 = VALUES(val3), 
+                val4 = VALUES(val4), 
+                val5 = VALUES(val5), 
+                overall = VALUES(overall)`;
+        let userRankingParams = [artistId, userId, rankLyrics, replayability, relevancy, rankArtistTraits, rankRecommend, newOverallRank];
+        await conn.query(userRankingInsertSql, userRankingParams);
+
+        // Calculate the new total rankings for the artist
+        let totalRankingsSql = `SELECT COUNT(*) AS times_ranked, 
+                                       AVG(val1) AS avg_val1, 
+                                       AVG(val2) AS avg_val2, 
+                                       AVG(val3) AS avg_val3, 
+                                       AVG(val4) AS avg_val4, 
+                                       AVG(val5) AS avg_val5, 
+                                       AVG(overall) AS avg_overall
+                                FROM user_rankings
+                                WHERE artist_id = ?`;
+        const [totalRankingsRows] = await conn.query(totalRankingsSql, [artistId]);
+
+        let { times_ranked, avg_val1, avg_val2, avg_val3, avg_val4, avg_val5, avg_overall } = totalRankingsRows[0];
+ 
+
+        //  Update the `total_rankings` table
+        let totalRankingsUpdateSql = `
+            INSERT INTO total_rankings (artist_id, times_ranked, overall, val1, val2, val3, val4, val5)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE 
+                times_ranked = VALUES(times_ranked),
+                overall = VALUES(overall),
+                val1 = VALUES(val1),
+                val2 = VALUES(val2),
+                val3 = VALUES(val3),
+                val4 = VALUES(val4),
+                val5 = VALUES(val5)`;
+        let totalRankingsParams = [artistId, times_ranked, avg_overall, avg_val1, avg_val2, avg_val3, avg_val4, avg_val5];
+        await conn.query(totalRankingsUpdateSql, totalRankingsParams);
+
+        console.log("Total rankings updated successfully for artist:", artistId);
+    } catch (error) {
+        console.error("Error updating total rankings:", error);
+        throw error;
+    }
+}
+
+async function addArtistIfNotExists(artistId, name, image, href) {
+    try {
+        let checkArtistSql = `SELECT * FROM artists WHERE artist_id = ?`;
+        const [existingArtist] = await conn.query(checkArtistSql, [artistId]);
+
+        if (existingArtist.length > 0) {
+            console.log(`Artist with ID ${artistId} already exists.`);
+            return;
+        }
+        let insertArtistSql = `
+            INSERT INTO artists (artist_id, name, image, href)
+            VALUES (?, ?, ?, ?)
+        `;
+        let insertParams = [artistId, name, image, href];
+        await conn.query(insertArtistSql, insertParams);
+
+        console.log(`Artist with ID ${artistId} added successfully.`);
+    } catch (error) {
+        console.error("Error adding artist:", error);
+        throw error;
+    }
+}
+
 //temp method for user
-app.post('/submit-rankings',(req,res) =>{
-    const { rankLyrics, Replayability,Relevancy,rankArtistTraits,rankRecommend} = req.body
-    console.log("user info!!")
+app.post('/submit-rankings', isAuth,  async (req,res) =>{
+    let {
+        rankLyrics,
+        Replayability,
+        Relevancy,
+        rankArtistTraits,
+        rankRecommend
+    } = req.body;
+
+    console.log("user info!!");
+
+    rankLyrics = parseInt(rankLyrics, 10);
+    Replayability = parseInt(Replayability, 10);
+    Relevancy = parseInt(Relevancy, 10);
+    rankRecommend = parseInt(rankRecommend, 10);
+
     let rank=0;
     for(let i = 0; i<rankArtistTraits.length; i++){
         rank+=1;
     }
+
     console.log (rankLyrics, 
         Replayability,
         Relevancy,
         rank,
         rankRecommend);
+        // Once artistId can be passed or given the rankings can be inserted for all database tables 
+    // let artistId = "4oUHIQIBe0LHzYfvXNW4QM"
+    let userId = req.session.userId
+    // await updateTotalRankings(artistId, userId, rankLyrics, Replayability, Relevancy, rank, rankRecommend);
 });
