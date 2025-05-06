@@ -132,6 +132,14 @@ h1 {
   color: #eee; /* light grey input text */
   border: 1px solid #555; /* darker grey input borders */
 }
+#infoModal .modal-body,
+#infoModal .modal-body .list-group-item,
+#infoModal .modal-body span {
+  color: black;
+}
+
+
+
 
 /* NAV BUTTONS */
 .metallo-btn {
